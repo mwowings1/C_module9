@@ -83,7 +83,11 @@ brain_body_ratio<- function(x,y,z){
 
 msleep<-msleep[!is.na(msleep$vore),]
 msleep<-msleep[!is.na(msleep$brainwt),]
-brain_body_ratio(msleep$vore, msleep$brainwt, msleep$bodywt)
+ratio<-brain_body_ratio(msleep$vore, msleep$brainwt, msleep$bodywt)
+ratio
 
+plot(ratio$brain_body_mean~ratio$vore)
 
+##omnivores have the greatest brain weight to body weight ratio with herbivores
+##being the lowest (but very similar to insectivores)
 
