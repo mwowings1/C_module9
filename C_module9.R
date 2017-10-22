@@ -55,9 +55,35 @@ ggplot(data = msleep, aes(x=bodywt, y=sleep_cycle))+
 ## they increase the hours of daily sleep as they increase in body weight. This may not 
 ## be justified considering we transformed the data and there was limited data. 
 
+## Question 3: 
+## how does the ratio of brain weight to body weight vary by diet type?
+## write a function that returns a dataframe with a row for each diet type (vore) category
+## and three columns named "vore" "brain_body_mean" and "brain_body_se" 
 
 
+brain_body_ratio<- function(x,y,z){
+  
+  names<-as.data.frame(sort(unique(x)))
+  brain<-tapply(y, x, mean, na.rm=T)
+  body<-tapply(z, x, mean, na.rm=T)
+  
+  m<-brain/body
+  
+  brainsd<-tapply(y, x, sd, na.rm=T)
+  bodysd<-tapply(z, x, sd, na.rm=T)
+  brainsd2<-brainsd/sqrt(length(na.omit(brainsd)))
+  bodysd2<-bodysd/sqrt(length(na.omit(bodysd)))
+  s<-brainsd2/bodysd2
+  
+  s1<-cbind(names,m,s)
+  colnames(s1)<-c("vore","brain_body_mean","brain_body_se")
+  rownames(s1)<-NULL
+  return(s1)
+}
 
+msleep<-msleep[!is.na(msleep$vore),]
+msleep<-msleep[!is.na(msleep$brainwt),]
+brain_body_ratio(msleep$vore, msleep$brainwt, msleep$bodywt)
 
 
 
