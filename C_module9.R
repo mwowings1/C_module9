@@ -34,26 +34,27 @@ boxplot(msleep2$sleep_total ~ msleep2$vore, xlab= "Diet Type", ylab= "Daily Slee
 ## Use plot() to show the relationship between the natural log of body size
 ## and the length of the sleep cycle 
 
-msleep$bodywt<-log(msleep$bodywt)
-head(log)
-
-msleep<-msleep[!is.na(msleep$sleep_cycle),]
+msleep3<-msleep[!is.na(msleep$sleep_cycle),]
+msleep3$logbodywt<-log(msleep3$bodywt)
 summary(msleep3)
 
-unique(msleep$conservation)
-msleep<-msleep[!is.na(msleep$conservation),]
-summary(msleep3)
+plot(msleep3$logbodywt, msleep3$sleep_cycle, xlab= "Log Body Weight (kg)", ylab = "Sleep Cycle Length (hr)", pch = 16, col= "blue")
 
-plot(msleep$bodywt, msleep$sleep_cycle, xlab= "Log Body Weight (kg)", ylab = "Sleep Cycle Length (hr)", pch = 16, col= "blue")
+unique(msleep3$conservation)
+msleep4<-msleep3[!is.na(msleep3$conservation),]
+summary(msleep4)
+unique(msleep4$conservation)
 
-ggplot(data = msleep, aes(x=bodywt, y=sleep_cycle))+
+ggplot(data = msleep4, aes(x=logbodywt, y=sleep_cycle))+
   geom_point()+
   facet_wrap(~ conservation)+
   stat_smooth(method="lm", se=F)
 
 ## Yes, the species within each conservation group show a linear trend where 
 ## they increase the hours of daily sleep as they increase in body weight. This may not 
-## be justified considering we transformed the data and there was limited data. 
+## be justified considering we transformed the data and there was limited data. Looking at conservation
+## en and nt there is only one data point so we can't say whether this data are linear. Vu there are only
+## two points so we can't say whether this data is really linear.
 
 ## Question 3: 
 ## how does the ratio of brain weight to body weight vary by diet type?
@@ -71,15 +72,18 @@ brain_body_ratio<- function(x,y,z){
   
   brainsd<-tapply(y, x, sd, na.rm=T)
   bodysd<-tapply(z, x, sd, na.rm=T)
-  brainsd2<-brainsd/sqrt(length(na.omit(brainsd)))
-  bodysd2<-bodysd/sqrt(length(na.omit(bodysd)))
-  s<-brainsd2/bodysd2
+  brainse<-brainsd/sqrt(length(na.omit(brainsd)))
+  bodyse<-bodysd/sqrt(length(na.omit(bodysd)))
+  se<-brainse/bodyse
   
-  s1<-cbind(names,m,s)
+  s1<-cbind(names,m,se)
   colnames(s1)<-c("vore","brain_body_mean","brain_body_se")
   rownames(s1)<-NULL
   return(s1)
 }
+
+test1 <- brain_body_ratio(msleep4$vore, msleep4$brainwt, msleep4$bodywt)
+head(test1)
 
 msleep<-msleep[!is.na(msleep$vore),]
 msleep<-msleep[!is.na(msleep$brainwt),]
