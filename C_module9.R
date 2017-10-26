@@ -95,3 +95,5 @@ plot(ratio$brain_body_mean~ratio$vore)
 ##omnivores have the greatest brain weight to body weight ratio with herbivores
 ##being the lowest (but very similar to insectivores)
 
+### Both parties completed the assignment separately. We then used github to generate a final version
+### that we both could edit to use the easiest route for each question. 
